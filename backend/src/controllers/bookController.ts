@@ -104,7 +104,9 @@ export async function getBooks(req: AuthenticatedRequest, res: Response) {
       lng,
       sort,
       limit = 20,
-      offset = 0
+      offset = 0,
+      my_books,
+      owner_id
     } = req.query as any;
 
     const userLat = lat ? parseFloat(lat) : (req.user ? (db.prepare('SELECT latitude FROM users WHERE id = ?').get(req.user.id) as any)?.latitude : 12.9716);
@@ -119,10 +121,22 @@ export async function getBooks(req: AuthenticatedRequest, res: Response) {
     `;
     const params: any[] = [];
 
-    if (availability) {
+    if (my_books === 'true' && req.user) {
+      query += ` AND b.owner_id = ?`;
+      params.push(req.user.id);
+    } else if (owner_id) {
+      query += ` AND b.owner_id = ?`;
+      params.push(owner_id);
+    } else if (req.user) {
+      // Exclude logged in user's books from general discover & search results
+      query += ` AND b.owner_id != ?`;
+      params.push(req.user.id);
+    }
+
+    if (availability && availability !== 'All') {
       query += ` AND b.status = ?`;
       params.push(availability);
-    } else {
+    } else if (!my_books && !owner_id) {
       query += ` AND b.status = 'Available'`;
     }
 
@@ -183,20 +197,27 @@ export async function getBooks(req: AuthenticatedRequest, res: Response) {
   }
 }
 
-export async function getNearbyBooks(req: Request, res: Response) {
+export async function getNearbyBooks(req: AuthenticatedRequest, res: Response) {
   try {
     const { lat, lng, radius = 10, limit = 20 } = req.query as any;
     const userLat = parseFloat(lat || '12.9716');
     const userLng = parseFloat(lng || '77.5946');
     const radiusKm = parseFloat(radius);
 
-    const query = `
+    let query = `
       SELECT b.*, u.name as owner_name, u.rating as owner_rating, u.city as owner_city
       FROM books b
       JOIN users u ON b.owner_id = u.id
       WHERE b.status = 'Available' AND u.is_suspended = 0
     `;
-    const books = db.prepare(query).all() as any[];
+    const params: any[] = [];
+
+    if (req.user) {
+      query += ` AND b.owner_id != ?`;
+      params.push(req.user.id);
+    }
+
+    const books = db.prepare(query).all(...params) as any[];
 
     const nearby = books.map(book => {
       const dist = calculateHaversineDistance(userLat, userLng, book.latitude, book.longitude);

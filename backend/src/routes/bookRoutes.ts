@@ -13,7 +13,7 @@ import { authenticateToken, optionalAuthenticateToken } from '../middleware/auth
 
 const router = Router();
 
-router.get('/nearby', getNearbyBooks);
+router.get('/nearby', optionalAuthenticateToken, getNearbyBooks);
 router.get('/recommended', optionalAuthenticateToken, getRecommended);
 router.get('/isbn/:isbn', lookupISBN);
 

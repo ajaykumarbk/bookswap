@@ -26,9 +26,8 @@ export const MyBooksPage: React.FC = () => {
   const loadMyBooks = async () => {
     setLoading(true);
     try {
-      const res = await api.getBooks({});
-      const mine = (res.books || []).filter((b: Book) => b.owner_id === user?.id);
-      setBooks(mine);
+      const res = await api.getBooks({ my_books: true, availability: 'All' });
+      setBooks(res.books || []);
     } catch (e) {
       console.error('Failed fetching my books:', e);
     } finally {

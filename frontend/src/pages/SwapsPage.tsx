@@ -213,6 +213,17 @@ export const SwapsPage: React.FC = () => {
                   </div>
                 )}
 
+                {/* Action Guide Banner for Pending requests */}
+                {swap.status === 'PENDING' && (
+                  <div className="bg-amber-50 border border-amber-200 p-3 rounded-2xl text-xs text-amber-900 flex items-center justify-between gap-2">
+                    <span>
+                      {isRequester 
+                        ? `⏳ Waiting for ${partnerName} to accept your request. You can open Chat to message them!` 
+                        : `👇 Action Required: Accept this request to swap, or open Chat to discuss details with ${partnerName}!`}
+                    </span>
+                  </div>
+                )}
+
                 {/* State Machine Control Buttons */}
                 <div className="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-slate-100">
                   
@@ -221,9 +232,17 @@ export const SwapsPage: React.FC = () => {
                     <>
                       <button
                         onClick={() => handleAccept(swap.id)}
-                        className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-xs"
+                        className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center gap-1.5"
                       >
-                        ✓ Accept Swap Request
+                        <CheckCircle2 className="w-4 h-4" />
+                        <span>Accept Swap Request</span>
+                      </button>
+                      <button
+                        onClick={() => setSelectedChatSwap(swap)}
+                        className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-xs flex items-center gap-1.5"
+                      >
+                        <MessageSquare className="w-4 h-4 text-amber-400" />
+                        <span>Chat & Discuss</span>
                       </button>
                       <button
                         onClick={() => handleReject(swap.id)}
@@ -234,8 +253,8 @@ export const SwapsPage: React.FC = () => {
                     </>
                   )}
 
-                  {/* Chat Button (Available when ACCEPTED / MEETUP / COMPLETED) */}
-                  {['ACCEPTED', 'MEETUP_PENDING', 'MEETUP_CONFIRMED', 'EXCHANGE_COMPLETED'].includes(swap.status) && (
+                  {/* Chat Button (Available for all active states: PENDING, ACCEPTED, MEETUP, COMPLETED) */}
+                  {(swap.status !== 'PENDING' || isRequester) && ['PENDING', 'ACCEPTED', 'MEETUP_PENDING', 'MEETUP_CONFIRMED', 'EXCHANGE_COMPLETED'].includes(swap.status) && (
                     <button
                       onClick={() => setSelectedChatSwap(swap)}
                       className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-xs flex items-center gap-1.5"
@@ -246,13 +265,13 @@ export const SwapsPage: React.FC = () => {
                   )}
 
                   {/* Meetup Arrange Button */}
-                  {['ACCEPTED', 'MEETUP_PENDING', 'MEETUP_CONFIRMED'].includes(swap.status) && (
+                  {['PENDING', 'ACCEPTED', 'MEETUP_PENDING', 'MEETUP_CONFIRMED'].includes(swap.status) && (
                     <button
                       onClick={() => setSelectedMeetupSwap(swap)}
                       className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-xs flex items-center gap-1.5"
                     >
                       <MapPin className="w-4 h-4" />
-                      <span>{swap.meetup ? 'Manage Meetup' : 'Arrange Public Meetup'}</span>
+                      <span>{swap.meetup ? 'Manage Meetup Location' : 'Arrange Public Meetup'}</span>
                     </button>
                   )}
 

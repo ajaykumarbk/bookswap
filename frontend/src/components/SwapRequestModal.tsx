@@ -32,8 +32,8 @@ export const SwapRequestModal: React.FC<SwapRequestModalProps> = ({
 
   const loadMyAvailableBooks = async () => {
     try {
-      const res = await api.getBooks({ availability: 'Available' });
-      const availableMine = (res.books || []).filter((b: Book) => b.owner_id === user?.id);
+      const res = await api.getBooks({ availability: 'Available', my_books: true });
+      const availableMine = res.books || [];
       setMyBooks(availableMine);
       if (availableMine.length > 0) {
         setSelectedOfferedIds([availableMine[0].id]);
