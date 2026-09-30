@@ -1,0 +1,24 @@
+# Backend Dependencies & Build Output
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Environment & Secrets
+.env
+.env.local
+
+# Local Data Stores & Uploads
+data/*.json
+!data/.gitkeep
+uploads/*
+!uploads/.gitkeep
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS & Editor Files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

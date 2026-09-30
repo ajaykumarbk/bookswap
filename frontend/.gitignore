@@ -1,0 +1,18 @@
+# Frontend Dependencies & Build Output
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Environment & Secrets
+.env
+.env.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS & Editor Files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
