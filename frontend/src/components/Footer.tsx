@@ -46,18 +46,11 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Demo Admin credentials hint */}
+          {/* Getting Started */}
           <div className="bg-slate-800/60 p-4 rounded-xl border border-slate-700/60">
-            <h4 className="font-semibold text-amber-400 mb-1 text-xs">Demo Credentials</h4>
-            <p className="text-[10px] text-slate-300">
-              <strong className="text-white">Admin Login:</strong><br />
-              Email: <code className="bg-slate-900 px-1 py-0.5 rounded text-amber-300">admin@bookswap.org</code><br />
-              Pass: <code className="bg-slate-900 px-1 py-0.5 rounded text-amber-300">admin123</code>
-            </p>
-            <p className="text-[10px] text-slate-300 mt-2">
-              <strong className="text-white">User Login:</strong><br />
-              Email: <code className="bg-slate-900 px-1 py-0.5 rounded text-sky-300">rahul@example.com</code><br />
-              Pass: <code className="bg-slate-900 px-1 py-0.5 rounded text-sky-300">password123</code>
+            <h4 className="font-semibold text-amber-400 mb-1 text-xs">Join the Community</h4>
+            <p className="text-[11px] text-slate-300 leading-relaxed">
+              Create your free account today to list books sitting on your shelf, connect with nearby readers, and swap books safely in your neighborhood.
             </p>
           </div>
 
